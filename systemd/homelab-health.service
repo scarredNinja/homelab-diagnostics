@@ -1,0 +1,13 @@
+[Unit]
+Description=Homelab Health Diagnostics and LLM Analyzer
+After=network.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/scarredninja/source/repos/homelab-diagnostics
+ExecStart=/usr/bin/bash /home/scarredninja/source/repos/homelab-diagnostics/src/check-homelab-health.sh --remediate
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

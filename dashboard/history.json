@@ -1,0 +1,1179 @@
+[
+  {
+    "timestamp": "2026-07-06T18:29:42.388959",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Warning",
+      "hardware": "Critical",
+      "network": "Warning"
+    }
+  },
+  {
+    "timestamp": "2026-07-06T18:30:13.775779",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Warning",
+      "hardware": "Critical",
+      "network": "Warning"
+    }
+  },
+  {
+    "timestamp": "2026-07-06T18:31:22.164696",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Warning",
+      "hardware": "Critical",
+      "network": "Warning"
+    }
+  },
+  {
+    "timestamp": "2026-07-06T18:32:57.308734",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Critical"
+    },
+    "remediations": [
+      {
+        "command": "docker service update --force arr_sonarr-exporter",
+        "description": "Force update degraded Swarm service arr_sonarr-exporter",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "FAILED (Code: 1): service update paused: update paused due to failure or early termination of task oztxlxg2soqvimp0jjdm0dj2z"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-06T18:45:26.485283",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Critical"
+    },
+    "remediations": [
+      {
+        "command": "docker service update --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "FAILED (Code: 1): service update paused: update paused due to failure or early termination of task t1h97bvtwd462ur6z28ouqjvt"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-06T19:00:30.451144",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Critical"
+    },
+    "remediations": [
+      {
+        "command": "docker service update --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "FAILED (Code: 1): service update paused: update paused due to failure or early termination of task zfl93p9zkyentwa643a7s09ut"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-06T19:15:21.975801",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Critical"
+    },
+    "remediations": [
+      {
+        "command": "docker service update --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "FAILED (Code: 1): service update paused: update paused due to failure or early termination of task txykhaoqmznf0g0altchecri3"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T07:51:53.792636",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_alertmanager",
+        "description": "Force update degraded Swarm service monitoring_alertmanager",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_grafana",
+        "description": "Force update degraded Swarm service monitoring_grafana",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_influxdb",
+        "description": "Force update degraded Swarm service monitoring_influxdb",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_loki",
+        "description": "Force update degraded Swarm service monitoring_loki",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_prometheus",
+        "description": "Force update degraded Swarm service monitoring_prometheus",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force portainer_portainer",
+        "description": "Force update degraded Swarm service portainer_portainer",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force uptime-kuma_uptime-kuma",
+        "description": "Force update degraded Swarm service uptime-kuma_uptime-kuma",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T08:00:26.559119",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_alertmanager",
+        "description": "Force update degraded Swarm service monitoring_alertmanager",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_grafana",
+        "description": "Force update degraded Swarm service monitoring_grafana",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_influxdb",
+        "description": "Force update degraded Swarm service monitoring_influxdb",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_loki",
+        "description": "Force update degraded Swarm service monitoring_loki",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force monitoring_prometheus",
+        "description": "Force update degraded Swarm service monitoring_prometheus",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "FAILED (Code: 1): service update paused: update paused due to failure or early termination of task x77zhucvqs3z51oohc9j3md6w"
+      },
+      {
+        "command": "docker service update --force uptime-kuma_uptime-kuma",
+        "description": "Force update degraded Swarm service uptime-kuma_uptime-kuma",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T08:05:09.694389",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "SUCCESS: homepage_homepage"
+      },
+      {
+        "command": "docker service update -d --force monitoring_alertmanager",
+        "description": "Force update degraded Swarm service monitoring_alertmanager",
+        "result": "SUCCESS: monitoring_alertmanager"
+      },
+      {
+        "command": "docker service update -d --force monitoring_grafana",
+        "description": "Force update degraded Swarm service monitoring_grafana",
+        "result": "SUCCESS: monitoring_grafana"
+      },
+      {
+        "command": "docker service update -d --force monitoring_influxdb",
+        "description": "Force update degraded Swarm service monitoring_influxdb",
+        "result": "SUCCESS: monitoring_influxdb"
+      },
+      {
+        "command": "docker service update -d --force monitoring_loki",
+        "description": "Force update degraded Swarm service monitoring_loki",
+        "result": "SUCCESS: monitoring_loki"
+      },
+      {
+        "command": "docker service update -d --force monitoring_prometheus",
+        "description": "Force update degraded Swarm service monitoring_prometheus",
+        "result": "SUCCESS: monitoring_prometheus"
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      },
+      {
+        "command": "docker service update -d --force uptime-kuma_uptime-kuma",
+        "description": "Force update degraded Swarm service uptime-kuma_uptime-kuma",
+        "result": "SUCCESS: uptime-kuma_uptime-kuma"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T08:06:54.532429",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "SUCCESS: homepage_homepage"
+      },
+      {
+        "command": "docker service update -d --force monitoring_alertmanager",
+        "description": "Force update degraded Swarm service monitoring_alertmanager",
+        "result": "SUCCESS: monitoring_alertmanager"
+      },
+      {
+        "command": "docker service update -d --force monitoring_grafana",
+        "description": "Force update degraded Swarm service monitoring_grafana",
+        "result": "SUCCESS: monitoring_grafana"
+      },
+      {
+        "command": "docker service update -d --force monitoring_influxdb",
+        "description": "Force update degraded Swarm service monitoring_influxdb",
+        "result": "SUCCESS: monitoring_influxdb"
+      },
+      {
+        "command": "docker service update -d --force monitoring_loki",
+        "description": "Force update degraded Swarm service monitoring_loki",
+        "result": "SUCCESS: monitoring_loki"
+      },
+      {
+        "command": "docker service update -d --force monitoring_prometheus",
+        "description": "Force update degraded Swarm service monitoring_prometheus",
+        "result": "SUCCESS: monitoring_prometheus"
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      },
+      {
+        "command": "docker service update -d --force uptime-kuma_uptime-kuma",
+        "description": "Force update degraded Swarm service uptime-kuma_uptime-kuma",
+        "result": "SUCCESS: uptime-kuma_uptime-kuma"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T08:08:43.709434",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "SUCCESS: homepage_homepage"
+      },
+      {
+        "command": "docker service update -d --force monitoring_alertmanager",
+        "description": "Force update degraded Swarm service monitoring_alertmanager",
+        "result": "SUCCESS: monitoring_alertmanager"
+      },
+      {
+        "command": "docker service update -d --force monitoring_grafana",
+        "description": "Force update degraded Swarm service monitoring_grafana",
+        "result": "SUCCESS: monitoring_grafana"
+      },
+      {
+        "command": "docker service update -d --force monitoring_influxdb",
+        "description": "Force update degraded Swarm service monitoring_influxdb",
+        "result": "SUCCESS: monitoring_influxdb"
+      },
+      {
+        "command": "docker service update -d --force monitoring_loki",
+        "description": "Force update degraded Swarm service monitoring_loki",
+        "result": "SUCCESS: monitoring_loki"
+      },
+      {
+        "command": "docker service update -d --force monitoring_prometheus",
+        "description": "Force update degraded Swarm service monitoring_prometheus",
+        "result": "SUCCESS: monitoring_prometheus"
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      },
+      {
+        "command": "docker service update -d --force uptime-kuma_uptime-kuma",
+        "description": "Force update degraded Swarm service uptime-kuma_uptime-kuma",
+        "result": "SUCCESS: uptime-kuma_uptime-kuma"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T08:09:49.311163",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "SUCCESS: homepage_homepage"
+      },
+      {
+        "command": "docker service update -d --force monitoring_alertmanager",
+        "description": "Force update degraded Swarm service monitoring_alertmanager",
+        "result": "SUCCESS: monitoring_alertmanager"
+      },
+      {
+        "command": "docker service update -d --force monitoring_grafana",
+        "description": "Force update degraded Swarm service monitoring_grafana",
+        "result": "SUCCESS: monitoring_grafana"
+      },
+      {
+        "command": "docker service update -d --force monitoring_influxdb",
+        "description": "Force update degraded Swarm service monitoring_influxdb",
+        "result": "SUCCESS: monitoring_influxdb"
+      },
+      {
+        "command": "docker service update -d --force monitoring_loki",
+        "description": "Force update degraded Swarm service monitoring_loki",
+        "result": "SUCCESS: monitoring_loki"
+      },
+      {
+        "command": "docker service update -d --force monitoring_prometheus",
+        "description": "Force update degraded Swarm service monitoring_prometheus",
+        "result": "SUCCESS: monitoring_prometheus"
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      },
+      {
+        "command": "docker service update -d --force uptime-kuma_uptime-kuma",
+        "description": "Force update degraded Swarm service uptime-kuma_uptime-kuma",
+        "result": "SUCCESS: uptime-kuma_uptime-kuma"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T08:42:42.708992",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update -d --force monitoring_cadvisor",
+        "description": "Force update degraded Swarm service monitoring_cadvisor",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update -d --force monitoring_node-exporter",
+        "description": "Force update degraded Swarm service monitoring_node-exporter",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update -d --force monitoring_promtail",
+        "description": "Force update degraded Swarm service monitoring_promtail",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent",
+        "description": "Force update degraded Swarm service portainer_portainer_agent",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      },
+      {
+        "command": "docker service update -d --force uptime-kuma_uptime-kuma",
+        "description": "Force update degraded Swarm service uptime-kuma_uptime-kuma",
+        "result": "FAILED (Code: -1): SSH connection timed out."
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T13:23:04.298716",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "SUCCESS: homepage_homepage"
+      },
+      {
+        "command": "docker service update -d --force monitoring_cadvisor",
+        "description": "Force update degraded Swarm service monitoring_cadvisor",
+        "result": "SUCCESS: monitoring_cadvisor"
+      },
+      {
+        "command": "docker service update -d --force monitoring_promtail",
+        "description": "Force update degraded Swarm service monitoring_promtail",
+        "result": "SUCCESS: monitoring_promtail"
+      },
+      {
+        "command": "docker service update -d --force obsidian-mcp_mcp-server",
+        "description": "Force update degraded Swarm service obsidian-mcp_mcp-server",
+        "result": "SUCCESS: obsidian-mcp_mcp-server"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer",
+        "description": "Force update degraded Swarm service portainer_portainer",
+        "result": "SUCCESS: portainer_portainer"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent",
+        "description": "Force update degraded Swarm service portainer_portainer_agent",
+        "result": "SUCCESS: portainer_portainer_agent"
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.wp9d83spb4ny@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer.1.s6z5y59nxehr@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.nux9du9b29b8@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.zw5gfw12vl5b@worker-media-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.l60je1ybzkya@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.xqvpaudwz9o7@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.fu7z6bkbx0rt@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.k1a2rust4wp1@dev-runner-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.r1nkw3pgxqtw@manager-02",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u971eo65cau1@worker-mediamanagement-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.s2f9jt44mri3@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.z1o2e44zx4nz@worker-monitoring-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.u6dabsw7h2a0@traefik-dmz-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.b1akvjw1svry@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.uweturb67ny8@manager-03",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.q3sy3dh5o096@manager-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.y13e2cjmsncr@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.numefx4zwiyv@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.pbtbff04n4tn@worker-controller-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.hpsxfuchl9wj@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "description": "Force update degraded Swarm service portainer_portainer_agent.0.2358jknxk5u1@dev-node-01",
+        "result": "Skipped (Not whitelisted)"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T13:27:22.112784",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "SUCCESS: homepage_homepage"
+      },
+      {
+        "command": "docker service update -d --force monitoring_cadvisor",
+        "description": "Force update degraded Swarm service monitoring_cadvisor",
+        "result": "SUCCESS: monitoring_cadvisor"
+      },
+      {
+        "command": "docker service update -d --force monitoring_promtail",
+        "description": "Force update degraded Swarm service monitoring_promtail",
+        "result": "SUCCESS: monitoring_promtail"
+      },
+      {
+        "command": "docker service update -d --force obsidian-mcp_mcp-server",
+        "description": "Force update degraded Swarm service obsidian-mcp_mcp-server",
+        "result": "SUCCESS: obsidian-mcp_mcp-server"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent",
+        "description": "Force update degraded Swarm service portainer_portainer_agent",
+        "result": "SUCCESS: portainer_portainer_agent"
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T13:33:48.025658",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force homepage_homepage",
+        "description": "Force update degraded Swarm service homepage_homepage",
+        "result": "SUCCESS: homepage_homepage"
+      },
+      {
+        "command": "docker service update -d --force monitoring_cadvisor",
+        "description": "Force update degraded Swarm service monitoring_cadvisor",
+        "result": "SUCCESS: monitoring_cadvisor"
+      },
+      {
+        "command": "docker service update -d --force monitoring_promtail",
+        "description": "Force update degraded Swarm service monitoring_promtail",
+        "result": "SUCCESS: monitoring_promtail"
+      },
+      {
+        "command": "docker service update -d --force obsidian-mcp_mcp-server",
+        "description": "Force update degraded Swarm service obsidian-mcp_mcp-server",
+        "result": "SUCCESS: obsidian-mcp_mcp-server"
+      },
+      {
+        "command": "docker service update -d --force portainer_portainer_agent",
+        "description": "Force update degraded Swarm service portainer_portainer_agent",
+        "result": "SUCCESS: portainer_portainer_agent"
+      },
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T13:52:41.640344",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Critical",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Healthy"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T18:43:04.225069",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Healthy",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Warning"
+    },
+    "remediations": [
+      {
+        "command": "docker service update -d --force temp-secret-check",
+        "description": "Force update degraded Swarm service temp-secret-check",
+        "result": "SUCCESS: temp-secret-check"
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-07-08T18:50:20.419992",
+    "overall_status": "Critical",
+    "domains": {
+      "backups": "Healthy",
+      "services": "Critical",
+      "hardware": "Warning",
+      "network": "Warning"
+    }
+  },
+  {
+    "timestamp": "2026-07-08T18:57:03.075500",
+    "overall_status": "Warning",
+    "domains": {
+      "backups": "Healthy",
+      "services": "Warning",
+      "hardware": "Warning",
+      "network": "Warning"
+    }
+  }
+]
