@@ -1,25 +1,26 @@
 steps:
-  - name: lint-and-test
+  lint-and-test:
     image: python:3.11-alpine
     commands:
       - apk add --no-cache shellcheck bash
       - shellcheck src/*.sh systemd/*.sh
       - python -m py_compile src/*.py
+    when:
+      event: [ push, pull_request, manual ]
 
-  - name: docker-build-push
+  docker-build-push:
     image: plugins/docker
+    privileged: true
     settings:
       registry: ghcr.io
       repo: ghcr.io/scarredninja/homelab-diagnostics
       tags:
         - latest
-        - ${CI_COMMIT_SHA:0:8}
+        - ${CI_COMMIT_SHA:0:7}
       username:
         from_secret: ghcr_username
       password:
-        from_secret: ghcr_pat
+        from_secret: ghcr_password
     when:
-      event:
-        - push
-      branch:
-        - main
+      branch: [ main, "feature/*", "release/*" ]
+      event: [ push, manual ]
