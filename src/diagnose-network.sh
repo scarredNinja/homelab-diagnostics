@@ -176,7 +176,7 @@ else
         if echo "$vpn_info" | grep -q "failed"; then
             echo "❌ ERROR: Could not fetch public IP from inside Gluetun container. Tunnel might be down."
         else
-            echo "✅ $(echo "$vpn_info" | sed 's/VPN: //')"
+            echo "✅ ${vpn_info#VPN: }"
         fi
         echo ""
         echo "Gluetun logs snippet:"

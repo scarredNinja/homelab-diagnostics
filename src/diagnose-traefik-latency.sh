@@ -131,7 +131,6 @@ echo "Run mode : $([ "$DMZ_DIRECT" = true ] && echo 'direct (Proxmox)' || echo '
 echo ""
 
 # ── Pre-flight: SSH agent (workstation mode only) ─────────────────────────────
-AGENT_OK=false
 if [[ "$DMZ_DIRECT" == "false" ]]; then
   if [[ -z "${SSH_AUTH_SOCK:-}" ]]; then
     echo "⚠️  SSH_AUTH_SOCK not set — ssh-agent is not running."
@@ -141,15 +140,13 @@ if [[ "$DMZ_DIRECT" == "false" ]]; then
     KEY_FP=$(ssh-keygen -l -f "${SSH_KEY}.pub" 2>/dev/null | awk '{print $2}' || true)
     if [[ -n "$KEY_FP" ]] && ssh-add -l 2>/dev/null | grep -qF "$KEY_FP"; then
       echo "✅ SSH agent OK — homelab key loaded ($KEY_FP)"
-      AGENT_OK=true
     else
       echo "⚠️  SSH agent running but homelab key not loaded. Run: ssh-add $SSH_KEY"
-      AGENT_OK=true  # still attempt; -A may forward other valid identities
     fi
   fi
 else
   # Proxmox (direct) mode — no agent forwarding needed
-  AGENT_OK=true
+  :
 fi
 
 # ── Pre-flight: SSH to manager ────────────────────────────────────────────────

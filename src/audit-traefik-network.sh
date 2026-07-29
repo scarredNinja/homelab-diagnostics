@@ -127,10 +127,6 @@ echo "---"
 echo "#### 4. Docker Swarm Stack Labels & Endpoint Modes"
 
 if ssh "${SSH_OPTS[@]}" "docker@$MGR_HOST" "echo OK" >/dev/null 2>&1; then
-  # Resolve traefik-dmz-01 IP
-  DMZ_IP=$(ssh "${SSH_OPTS[@]}" "docker@$MGR_HOST" \
-    'docker node inspect traefik-dmz-01 --format "{{.Status.Addr}}" 2>/dev/null || echo ""')
-
   # Query all Traefik enabled services and print their configs
   ssh "${SSH_OPTS[@]}" "docker@$MGR_HOST" 'bash -s' <<'REMOTE_AUDIT'
     SVCS=$(docker service ls --format "{{.Name}}" | while read -r s; do
