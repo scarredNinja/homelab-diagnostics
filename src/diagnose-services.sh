@@ -8,8 +8,6 @@ MGR_HOST="10.0.60.30"
 SSH_KEY="$HOME/.ssh/homelab_ed25519"
 SSH_OPTS=(-i "$SSH_KEY" -o BatchMode=yes -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5)
 
-UPTIME_KUMA_URL="http://uptime-kuma:3001"
-
 echo "### 🐳 Services Diagnostic"
 echo ""
 
@@ -203,10 +201,10 @@ if [ -z "$TRAEFIK_CTR" ]; then
     echo "   (Traefik runs on traefik-dmz-01 worker — checking via SSH)"
     SWARM_ROUTE_COUNT=$(ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
         -o ConnectTimeout=5 docker@"$DMZ_IP" \
-        'CTR=$(docker ps --filter name=traefik_traefik --filter status=running --format "{{.ID}}" | head -1);
-         [ -n "$CTR" ] && docker exec "$CTR" wget -qO- http://localhost:8080/api/http/routers 2>/dev/null \
-             | python3 -c "import sys,json; d=json.load(sys.stdin); print(sum(1 for r in d if r.get(\"provider\",\"\").startswith(\"swarm\")))" 2>/dev/null \
-             || echo "API_UNAVAILABLE"' 2>/dev/null || echo "SSH_FAILED")
+        "CTR=\$(docker ps --filter name=traefik_traefik --filter status=running --format \"{{.ID}}\" | head -1); \
+         [ -n \"\$CTR\" ] && docker exec \"\$CTR\" wget -qO- http://localhost:8080/api/http/routers 2>/dev/null \
+             | python3 -c \"import sys,json; d=json.load(sys.stdin); print(sum(1 for r in d if r.get(\\\"provider\\\",\\\"\\\").startswith(\\\"swarm\\\")))\" 2>/dev/null \
+             || echo \"API_UNAVAILABLE\"" 2>/dev/null || echo "SSH_FAILED")
 else
     SWARM_ROUTE_COUNT=$(docker exec "$TRAEFIK_CTR" \
         wget -qO- http://localhost:8080/api/http/routers 2>/dev/null \
