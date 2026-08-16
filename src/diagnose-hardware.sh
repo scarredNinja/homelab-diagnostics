@@ -52,7 +52,10 @@ try:
         for line in f:
             parts = line.split()
             if len(parts) >= 3:
-                stats[parts[0]] = int(parts[2])
+                try:
+                    stats[parts[0]] = int(parts[2], 0)
+                except Exception:
+                    pass
     size = stats.get("size", 0)
     c_max = stats.get("c_max", 0)
     hits = stats.get("hits", 0)
