@@ -52,6 +52,10 @@ REMEDIATION_WHITELIST = {
         "host": "root@" + PVE_HOST,
         "pattern": r"^qm start [0-9]+$"
     },
+    "qm stop": {
+        "host": "root@" + PVE_HOST,
+        "pattern": r"^qm stop (?:206|207)$"
+    },
     # Docker daemon restart on a specific Swarm node — host is dynamic
     "sudo systemctl restart docker": {
         "host": None,  # resolved dynamically from command metadata
@@ -526,6 +530,37 @@ def remediate_degraded_services(degraded_services, output_dir=None, current_time
     return results
 
 
+def remediate_high_cpu_steal(hardware_data, output_dir=None, current_timestamp=None):
+    """
+    If host CPU steal > 30%, safely shut down non-critical dev VMs (206, 207)
+    to relieve hypervisor CPU contention on Proxmox VE.
+    """
+    metrics = hardware_data.get("metrics", {})
+    cpu_steal = metrics.get("cpu_steal_pct", 0.0)
+
+    if cpu_steal <= 30.0:
+        return []
+
+    print(f"Detected high host CPU steal ({cpu_steal}% > 30%). Evaluating safe dev VM shutdown (206, 207)...")
+    pve_vms = get_proxmox_vm_list()
+    results = []
+
+    # Dev VMs safe for automated shutdown
+    dev_vm_ids = ["206", "207"]
+    for vm_name, info in pve_vms.items():
+        vmid = str(info.get("vmid", ""))
+        status = info.get("status", "")
+        if vmid in dev_vm_ids and status == "running":
+            cmd = f"qm stop {vmid}"
+            res = execute_remediation(cmd, output_dir=output_dir, current_timestamp=current_timestamp)
+            results.append({
+                "node": f"pve-host (VM {vmid} - {vm_name})",
+                "action": cmd,
+                "result": res
+            })
+    return results
+
+
 def run_ollama(status_data):
     # Build a compact summary of nodes for the prompt
     nodes = status_data.get("domains", {}).get("services", {}).get("nodes", [])
@@ -534,10 +569,18 @@ def run_ollama(status_data):
         down = [n["hostname"] for n in nodes if n["status"] != "Ready"]
         node_summary = f"\nSwarm nodes: {len(nodes)} total, {len(down)} down ({', '.join(down) if down else 'none'})."
 
+    # Hardware & Network summaries
+    hw_metrics = status_data.get("domains", {}).get("hardware", {}).get("metrics", {})
+    net_nics = status_data.get("domains", {}).get("network", {}).get("synology_nics", {})
+
     system_prompt = (
         "You are the Homelab Monitor Assistant. You analyze JSON telemetry from backups, services, hardware, and networks.\n"
-        "Your task is to identify issues, suggest non-destructive remediations, and produce a summary.\n"
-        "You MUST respond with a JSON block followed by a Markdown report.\n\n"
+        "Your task is to identify issues, analyze PVE hardware resourcing, ARC sizing, CPU steal, dual-NIC segregation, suggest non-destructive remediations, and produce a summary.\n"
+        "Guidelines:\n"
+        "1. PVE Hardware Resourcing & CPU Steal: If host CPU steal > 30% or D-State hung tasks are present, identify whether dev VMs (VM 206/207) or VirtIO-FS / I/O locks are causing CPU starvation.\n"
+        "2. ZFS ARC Sizing: Verify ARC size vs target max and cache hit rate (> 80% is healthy). Check host swap zvol usage.\n"
+        "3. Dual-NIC Segregation: Verify Synology NIC 1 (10.0.100.20 VLAN 100) handles high-bandwidth media / NFS traffic and NIC 2 (10.0.60.45 VLAN 60) handles management / backups without crossing or dropping traffic.\n"
+        "4. Output format: You MUST respond with a JSON block followed by a Markdown report.\n\n"
         "Format your response EXACTLY like this:\n"
         "```json\n"
         "{\n"
@@ -545,7 +588,8 @@ def run_ollama(status_data):
         "  \"analysis_summary\": \"Conversational summary of health\",\n"
         "  \"remediations\": [\n"
         "     {\"command\": \"docker service update -d --force stackname_servicename\", \"description\": \"Restart degraded service\"},\n"
-        "     {\"command\": \"docker restart container_name\", \"description\": \"Restart stuck container\"}\n"
+        "     {\"command\": \"docker restart container_name\", \"description\": \"Restart stuck container\"},\n"
+        "     {\"command\": \"qm stop 206\", \"description\": \"Stop dev VM 206 to relieve high CPU steal\"}\n"
         "  ]\n"
         "}\n"
         "```\n"
@@ -555,6 +599,7 @@ def run_ollama(status_data):
         "- `docker service update -d --force <service_name>` (if replica counts do not match)\n"
         "- `docker restart <container_name>` (if container status is not running/healthy; whitelisted for `gluetun` and `compose-vpn-transmission-1`)\n"
         "- `qm start <vmid>` (if a Proxmox VM/Swarm node is stopped)\n"
+        "- `qm stop 206` / `qm stop 207` (if host CPU steal > 30% and dev VMs need to be suspended)\n"
         "- `sudo systemctl restart docker` (if a Swarm node VM is running but Docker is unresponsive)\n"
         "Do not suggest other auto-remediations."
         + node_summary
@@ -627,6 +672,25 @@ def fallback_rule_based_diagnosis(status_data):
             "command": "restic unlock",
             "description": "Unlock locked restic repository"
         })
+
+    # High CPU Steal remediation
+    hw_metrics = status_data.get("domains", {}).get("hardware", {}).get("metrics", {})
+    if hw_metrics.get("cpu_steal_pct", 0.0) > 30.0:
+        summary += f" High Host CPU Steal detected ({hw_metrics['cpu_steal_pct']}%)."
+        remediations.append({
+            "command": "qm stop 206",
+            "description": "Stop dev VM 206 to mitigate high CPU steal"
+        })
+
+    # D-State tasks
+    if hw_metrics.get("d_state_detected"):
+        summary += " D-State (I/O wait) tasks detected on host."
+
+    # Synology Dual-NIC
+    syn_nics = status_data.get("domains", {}).get("network", {}).get("synology_nics", {})
+    for k, v in syn_nics.items():
+        if v.get("status") == "DOWN":
+            summary += f" Synology interface {v.get('ip')} (VLAN {v.get('vlan')}) is DOWN."
 
     analysis = {
         "overall_status": overall,
@@ -716,12 +780,17 @@ def main():
     # ── Traefik & Degraded Services Recovery ───────────────────────────────────
     traefik_remediation_results = []
     degraded_services_results = []
+    cpu_steal_remediation_results = []
     if args.remediate:
         traefik_data = status_data.get("domains", {}).get("services", {}).get("traefik", {})
         traefik_remediation_results = remediate_traefik_issues(traefik_data, output_dir=output_dir, current_timestamp=current_timestamp)
         
         degraded_services = status_data.get("domains", {}).get("services", {}).get("degraded_services", [])
         degraded_services_results = remediate_degraded_services(degraded_services, output_dir=output_dir, current_timestamp=current_timestamp)
+
+        # High CPU Steal remediation (dev VM suspensions)
+        hw_data = status_data.get("domains", {}).get("hardware", {})
+        cpu_steal_remediation_results = remediate_high_cpu_steal(hw_data, output_dir=output_dir, current_timestamp=current_timestamp)
 
     # ── LLM / Rule-based Diagnosis ─────────────────────────────────────────────
     ollama_output = run_ollama(status_data)
@@ -812,6 +881,18 @@ def main():
                 "result": dr["result"]
             })
 
+    # Append CPU steal dev VM shutdown results
+    if cpu_steal_remediation_results:
+        for cr in cpu_steal_remediation_results:
+            remediations_run.append(
+                f"- **CPU Contention Mitigation** `{cr['node']}`: `{cr['action']}`\n  **Result**: {cr['result']}"
+            )
+            remediations_list.append({
+                "command": cr["action"],
+                "description": f"CPU steal mitigation for {cr['node']}",
+                "result": cr["result"]
+            })
+
     if remediations_list:
         record_remediations_in_history(output_dir, current_timestamp, remediations_list)
 
@@ -835,6 +916,10 @@ def main():
             node_section += "\n**Service Recovery Actions:**\n"
             for dr in degraded_services_results:
                 node_section += f"- `{dr['node']}` → `{dr['action']}` (service: `{dr['service']}`): {dr['result']}\n"
+        if cpu_steal_remediation_results:
+            node_section += "\n**CPU Contention Mitigation Actions:**\n"
+            for cr in cpu_steal_remediation_results:
+                node_section += f"- `{cr['node']}` → `{cr['action']}`: {cr['result']}\n"
 
     obsidian_content = f"""## Report — {datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 Overall Health: **{analysis.get('overall_status')}**

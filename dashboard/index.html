@@ -108,7 +108,12 @@
                     <span class="badge" id="badge-hardware">Unknown</span>
                 </div>
                 <div class="card-body">
-                    <p>PVE host resource loads, ZFS pools & SMART health.</p>
+                    <p>PVE host resourcing, CPU steal, ZFS ARC & SMART.</p>
+                    <div class="card-quick-stats" id="hardware-quick-stats">
+                        <span class="metric-pill" id="pill-cpu-steal">Steal: --%</span>
+                        <span class="metric-pill" id="pill-zfs-arc">ARC: --</span>
+                        <span class="metric-pill" id="pill-swap-usage">Swap: --</span>
+                    </div>
                     <button class="btn btn-sm btn-outline view-log-btn" data-domain="hardware">View Diagnostics</button>
                 </div>
             </div>
@@ -123,7 +128,11 @@
                     <span class="badge" id="badge-network">Unknown</span>
                 </div>
                 <div class="card-body">
-                    <p>Inter-VLAN gateways, Pi-hole DNS & VPN tunnels.</p>
+                    <p>Inter-VLAN gateways, Pi-hole & Synology Dual-NIC.</p>
+                    <div class="card-quick-stats" id="network-quick-stats">
+                        <span class="metric-pill" id="pill-syn-nic1">NIC1 (100): --</span>
+                        <span class="metric-pill" id="pill-syn-nic2">NIC2 (60): --</span>
+                    </div>
                     <button class="btn btn-sm btn-outline view-log-btn" data-domain="network">View Diagnostics</button>
                 </div>
             </div>

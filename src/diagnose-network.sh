@@ -184,3 +184,35 @@ else
     fi
 fi
 echo "\`\`\`"
+echo ""
+
+echo "#### 5. Synology NAS Dual-NIC Probing & Segregation"
+echo "Testing connectivity to both Synology physical interfaces..."
+echo "\`\`\`"
+synology_nics=(
+    "10.0.100.20:NIC 1 (Media / High-Bandwidth VLAN 100):8000,5000"
+    "10.0.60.45:NIC 2 (Management & Backups VLAN 60):22,5000"
+)
+
+for nic_info in "${synology_nics[@]}"; do
+    nic_ip=$(echo "$nic_info" | cut -d: -f1)
+    nic_desc=$(echo "$nic_info" | cut -d: -f2)
+    nic_ports=$(echo "$nic_info" | cut -d: -f3)
+
+    echo "Checking $nic_desc ($nic_ip):"
+    if ping -c 2 -W 2 "$nic_ip" >/dev/null 2>&1; then
+        echo "  ✅ Ping: REACHABLE"
+    else
+        echo "  ❌ Ping: UNREACHABLE"
+    fi
+
+    IFS=',' read -ra PORTS <<< "$nic_ports"
+    for port in "${PORTS[@]}"; do
+        if timeout 3 bash -c "echo >/dev/tcp/${nic_ip}/${port}" 2>/dev/null; then
+            echo "  ✅ TCP Port ${port}: OPEN / ACCEPTING"
+        else
+            echo "  ⚠️ TCP Port ${port}: CLOSED / FILTERED"
+        fi
+    done
+done
+echo "\`\`\`"

@@ -1,7 +1,7 @@
 # automation/windows/Invoke-HomelabHealth.ps1
 #
 # Runs the homelab health check orchestrator inside WSL2.
-# Called by the Windows Task Scheduler every 15 minutes.
+# Called by the Windows Task Scheduler every 1 hour.
 #
 # Usage (manual run):
 #   powershell -NonInteractive -ExecutionPolicy Bypass -File "C:\Users\DJ\source\repos\docker-swarm-home\automation\windows\Invoke-HomelabHealth.ps1"
