@@ -119,8 +119,8 @@ python3 "$SCRIPT_DIR/llm-diagnose.py" \
 
 # If we ran remediations, wait and perform a verification check
 if [ "$REMEDIATE" = true ]; then
-    echo "Waiting 10 seconds for service updates to propagate..."
-    sleep 10
+    echo "Waiting 30 seconds for service updates to propagate..."
+    sleep 30
     echo "=== Running Post-Remediation Verification ==="
     # Run diagnose-services.sh again to check current status
     VERIFY_LOG=$(mktemp)

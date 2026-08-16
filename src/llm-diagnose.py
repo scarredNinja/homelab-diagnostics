@@ -506,20 +506,107 @@ def remediate_traefik_issues(traefik_data, output_dir=None, current_timestamp=No
     }]
 
 
-def remediate_degraded_services(degraded_services, output_dir=None, current_timestamp=None):
+def check_host_cpu_circuit_breaker(hardware_data):
     """
-    Restart any degraded services automatically.
+    Check if the hypervisor is under heavy CPU or load contention.
+    Returns (can_remediate: bool, reason: str).
+    """
+    if not hardware_data:
+        return True, "No hardware telemetry available."
+
+    metrics = hardware_data.get("metrics", {})
+    load_1m = metrics.get("load_1m")
+    cpu_steal = metrics.get("cpu_steal_pct", 0.0)
+
+    # 24 hyperthreads on HP DL360p Gen8 (2x Intel Xeon E5-2630)
+    if load_1m is not None and load_1m > 24.0:
+        return False, f"Host 1m load average ({load_1m:.1f}) exceeds physical hyperthread threshold (24.0)."
+
+    if cpu_steal is not None and cpu_steal > 30.0:
+        return False, f"Host CPU steal ({cpu_steal:.1f}%) exceeds hypervisor headroom threshold (30.0%)."
+
+    return True, "Host CPU headroom is healthy."
+
+
+def get_service_remediation_priority(service_name):
+    """
+    Dependency-aware priority ordering for service recovery:
+    1: Databases / Datastores (Postgres, Mongo, InfluxDB, Redis)
+    2: Core Infrastructure (Traefik, Forgejo, Woodpecker, NetBox)
+    3: Telemetry & Monitoring (Prometheus, Loki, Alertmanager, Grafana)
+    4: Frontends & Dashboards (Homepage, Uptime Kuma, Arr stack)
+    """
+    name = service_name.lower()
+    if any(db in name for db in ["_db", "postgres", "mongo", "influxdb", "redis"]):
+        return 1
+    if any(core in name for core in ["traefik", "forgejo", "woodpecker", "netbox"]):
+        return 2
+    if any(mon in name for mon in ["prometheus", "alertmanager", "loki", "grafana", "exporter", "promtail", "cadvisor"]):
+        return 3
+    return 4
+
+
+def remediate_degraded_services(degraded_services, hardware_data=None, output_dir=None, current_timestamp=None, max_services=2, stagger_delay=20):
+    """
+    Restart degraded services with:
+    1. Hypervisor CPU circuit breaker.
+    2. Dependency-aware priority sorting (Databases first).
+    3. Capping at max_services per run (default 2).
+    4. Stagger delay (default 20s) between successive service restarts.
+    5. Skipping services recently force-updated in the past 2 hours.
     """
     if not degraded_services:
         return []
 
-    print(f"Detected {len(degraded_services)} degraded service(s) to recover: {degraded_services}")
+    services = [s for s in degraded_services if s != "temp-secret-check"]
+    if not services:
+        return []
+
+    # Check hypervisor circuit breaker
+    if hardware_data:
+        can_remediate, reason = check_host_cpu_circuit_breaker(hardware_data)
+        if not can_remediate:
+            print(f"⚠️ Circuit Breaker Tripped: Skipping automated service restarts — {reason}")
+            return [{
+                "node": "swarm-manager",
+                "action": "skipped_circuit_breaker",
+                "result": f"Circuit breaker tripped: {reason}",
+                "service": "all"
+            }]
+
+    # Filter out services currently in 2-hour cooldown
+    eligible_services = []
+    if output_dir and current_timestamp:
+        recent_commands = get_remediations_in_last_2_hours(output_dir, current_timestamp)
+        for svc in services:
+            cmd = f"docker service update -d --force {svc}"
+            norm_cmd = normalize_command(cmd)
+            is_cooldown = any(normalize_command(rc) == norm_cmd for rc in recent_commands)
+            if is_cooldown:
+                print(f"Skipped (cooldown): Service '{svc}' was already force-updated in the past 2 hours.")
+            else:
+                eligible_services.append(svc)
+    else:
+        eligible_services = services
+
+    if not eligible_services:
+        print("No eligible degraded services to remediate (all in 2h cooldown).")
+        return []
+
+    # Sort by dependency priority and select top N
+    sorted_services = sorted(eligible_services, key=get_service_remediation_priority)
+    to_remediate = sorted_services[:max_services]
+
+    print(f"Eligible degraded service(s): {eligible_services}. Selected top {len(to_remediate)} priority target(s): {to_remediate}")
+
     results = []
-    for svc in degraded_services:
-        # Ignore temp-secret-check as it is a stale one-shot helper
-        if svc == "temp-secret-check":
-            continue
-        cmd = f"docker service update --force {svc}"
+    import time
+    for idx, svc in enumerate(to_remediate):
+        if idx > 0 and stagger_delay > 0:
+            print(f"Staggering: waiting {stagger_delay}s before remediating next service '{svc}'...")
+            time.sleep(stagger_delay)
+
+        cmd = f"docker service update -d --force {svc}"
         res = execute_remediation(cmd, output_dir=output_dir, current_timestamp=current_timestamp)
         results.append({
             "node": "swarm-manager",
@@ -577,10 +664,11 @@ def run_ollama(status_data):
         "You are the Homelab Monitor Assistant. You analyze JSON telemetry from backups, services, hardware, and networks.\n"
         "Your task is to identify issues, analyze PVE hardware resourcing, ARC sizing, CPU steal, dual-NIC segregation, suggest non-destructive remediations, and produce a summary.\n"
         "Guidelines:\n"
-        "1. PVE Hardware Resourcing & CPU Steal: If host CPU steal > 30% or D-State hung tasks are present, identify whether dev VMs (VM 206/207) or VirtIO-FS / I/O locks are causing CPU starvation.\n"
+        "1. PVE Hardware Resourcing & CPU Headroom: Check host load average vs 24-core limit and CPU steal (> 30%). If host is saturated, do NOT recommend mass restarts. Identify whether dev VMs (VM 206/207) or VirtIO-FS / I/O locks are causing CPU starvation.\n"
         "2. ZFS ARC Sizing: Verify ARC size vs target max and cache hit rate (> 80% is healthy). Check host swap zvol usage.\n"
-        "3. Dual-NIC Segregation: Verify Synology NIC 1 (10.0.100.20 VLAN 100) handles high-bandwidth media / NFS traffic and NIC 2 (10.0.60.45 VLAN 60) handles management / backups without crossing or dropping traffic.\n"
-        "4. Output format: You MUST respond with a JSON block followed by a Markdown report.\n\n"
+        "3. Dual-NIC Segregation: Verify Synology NIC 1 (10.0.100.20 VLAN 100) handles high-bandwidth media / NFS traffic and NIC 2 (10.0.60.80 VLAN 60) handles management / backups without crossing or dropping traffic.\n"
+        "4. Staggered Service Remediation: Recommend AT MOST 2 highest-priority root-cause services. Prioritize datastores/databases (*_db, postgres, mongo, influxdb) before frontend dashboards (homepage, uptime-kuma).\n"
+        "5. Output format: You MUST respond with a JSON block followed by a Markdown report.\n\n"
         "Format your response EXACTLY like this:\n"
         "```json\n"
         "{\n"
@@ -596,7 +684,7 @@ def run_ollama(status_data):
         "Followed by your detailed Markdown report.\n"
         "Whitelisted remediation commands are:\n"
         "- `restic unlock` (if repository is reported locked)\n"
-        "- `docker service update -d --force <service_name>` (if replica counts do not match)\n"
+        "- `docker service update -d --force <service_name>` (if replica counts do not match; max 2 services)\n"
         "- `docker restart <container_name>` (if container status is not running/healthy; whitelisted for `gluetun` and `compose-vpn-transmission-1`)\n"
         "- `qm start <vmid>` (if a Proxmox VM/Swarm node is stopped)\n"
         "- `qm stop 206` / `qm stop 207` (if host CPU steal > 30% and dev VMs need to be suspended)\n"
@@ -651,7 +739,7 @@ def fallback_rule_based_diagnosis(status_data):
                     parts = line.split()
                     if len(parts) > 0 and parts[0] != "NAME":
                         degraded_services.append(parts[0])
-        for svc in degraded_services:
+        for svc in sorted(degraded_services, key=get_service_remediation_priority)[:2]:
             remediations.append({
                 "command": f"docker service update -d --force {svc}",
                 "description": f"Force update degraded Swarm service {svc}"
@@ -770,6 +858,7 @@ def main():
 
     output_dir = os.path.dirname(args.status)
     current_timestamp = status_data["timestamp"]
+    hw_data = status_data.get("domains", {}).get("hardware", {})
 
     # ── Node Recovery ──────────────────────────────────────────────────────────
     node_remediation_results = []
@@ -786,10 +875,16 @@ def main():
         traefik_remediation_results = remediate_traefik_issues(traefik_data, output_dir=output_dir, current_timestamp=current_timestamp)
         
         degraded_services = status_data.get("domains", {}).get("services", {}).get("degraded_services", [])
-        degraded_services_results = remediate_degraded_services(degraded_services, output_dir=output_dir, current_timestamp=current_timestamp)
+        degraded_services_results = remediate_degraded_services(
+            degraded_services,
+            hardware_data=hw_data,
+            output_dir=output_dir,
+            current_timestamp=current_timestamp,
+            max_services=2,
+            stagger_delay=20
+        )
 
         # High CPU Steal remediation (dev VM suspensions)
-        hw_data = status_data.get("domains", {}).get("hardware", {})
         cpu_steal_remediation_results = remediate_high_cpu_steal(hw_data, output_dir=output_dir, current_timestamp=current_timestamp)
 
     # ── LLM / Rule-based Diagnosis ─────────────────────────────────────────────
@@ -822,19 +917,22 @@ def main():
 
     print(f"Analysis Summary: {analysis.get('analysis_summary')}")
 
-    # ── Service-level Remediations ─────────────────────────────────────────────
+    # ── Service-level Remediations (Non-service items like restic or compose) ──
     remediations_run = []
     remediations_list = []
     if args.remediate and analysis.get("remediations"):
         print("Evaluating auto-remediations...")
         for rem in analysis["remediations"]:
-            cmd = rem.get("command")
-            desc = rem.get("description")
-            if "traefik_traefik" in cmd:
+            cmd = rem.get("command", "").strip()
+            desc = rem.get("description", "")
+            if not cmd or "traefik_traefik" in cmd:
+                continue
+            # Docker service updates are already handled centrally by remediate_degraded_services()
+            if "docker service update" in cmd:
                 continue
             is_handled = False
             for sr in degraded_services_results:
-                if sr['action'] == cmd:
+                if sr.get('action') == cmd:
                     is_handled = True
                     break
             if is_handled:

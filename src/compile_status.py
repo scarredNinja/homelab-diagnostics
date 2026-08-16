@@ -117,8 +117,11 @@ def parse_traefik_status(services_log):
     }
 
 def parse_hardware_metrics(hardware_log):
-    """Parse CPU steal, iowait, ZFS ARC stats, swap, D-state tasks, and VM usage."""
+    """Parse CPU steal, iowait, load average, ZFS ARC stats, swap, D-state tasks, and VM usage."""
     metrics = {
+        "load_1m": None,
+        "load_5m": None,
+        "load_15m": None,
         "cpu_steal_pct": 0.0,
         "cpu_iowait_pct": 0.0,
         "arc_size_gib": None,
@@ -130,6 +133,16 @@ def parse_hardware_metrics(hardware_log):
         "d_state_tasks": [],
         "vm_usage": []
     }
+
+    # Load average from uptime
+    load_match = re.search(r"load average:\s*([\d\.]+),\s*([\d\.]+),\s*([\d\.]+)", hardware_log)
+    if load_match:
+        try:
+            metrics["load_1m"] = float(load_match.group(1))
+            metrics["load_5m"] = float(load_match.group(2))
+            metrics["load_15m"] = float(load_match.group(3))
+        except ValueError:
+            pass
 
     # CPU Steal & IO Wait (from vmstat / mpstat / iostat / top)
     vmstat_match = re.search(r"usr:\s*([\d\.]+)%?,\s*sys:\s*([\d\.]+)%?,\s*id:\s*([\d\.]+)%?,\s*wa:\s*([\d\.]+)%?,\s*st:\s*([\d\.]+)%?", hardware_log)
@@ -201,7 +214,7 @@ def parse_network_metrics(network_log):
     """Parse Synology Dual-NIC interface statuses from network log."""
     synology = {
         "nic1_media": {"ip": "10.0.100.20", "vlan": 100, "status": "Unknown", "ping": False, "ports": {}},
-        "nic2_mgmt": {"ip": "10.0.60.45", "vlan": 60, "status": "Unknown", "ping": False, "ports": {}}
+        "nic2_mgmt": {"ip": "10.0.60.80", "vlan": 60, "status": "Unknown", "ping": False, "ports": {}}
     }
 
     # NIC 1 (10.0.100.20)
@@ -215,8 +228,8 @@ def parse_network_metrics(network_log):
             state = "OPEN" if "OPEN" in port_match.group(2) else "CLOSED"
             synology["nic1_media"]["ports"][port] = state
 
-    # NIC 2 (10.0.60.45)
-    nic2_match = re.search(r"NIC 2.*?\((10\.0\.60\.45)\):\n(.*?)(?=(?:```|\Z))", network_log, re.DOTALL)
+    # NIC 2 (10.0.60.80)
+    nic2_match = re.search(r"NIC 2.*?\((10\.0\.60\.80)\):\n(.*?)(?=(?:```|\Z))", network_log, re.DOTALL)
     if nic2_match:
         block = nic2_match.group(2)
         synology["nic2_mgmt"]["ping"] = "Ping: REACHABLE" in block

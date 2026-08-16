@@ -191,7 +191,7 @@ echo "Testing connectivity to both Synology physical interfaces..."
 echo "\`\`\`"
 synology_nics=(
     "10.0.100.20:NIC 1 (Media / High-Bandwidth VLAN 100):8000,5000"
-    "10.0.60.45:NIC 2 (Management & Backups VLAN 60):22,5000"
+    "10.0.60.80:NIC 2 (Management & Backups VLAN 60):22,5000"
 )
 
 for nic_info in "${synology_nics[@]}"; do
