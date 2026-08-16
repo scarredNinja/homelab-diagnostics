@@ -115,6 +115,118 @@ def parse_traefik_status(services_log):
         "backend_net_ok": not backend_net_missing,
         "needs_redeploy": needs_redeploy
     }
+
+def parse_hardware_metrics(hardware_log):
+    """Parse CPU steal, iowait, ZFS ARC stats, swap, D-state tasks, and VM usage."""
+    metrics = {
+        "cpu_steal_pct": 0.0,
+        "cpu_iowait_pct": 0.0,
+        "arc_size_gib": None,
+        "arc_target_max_gib": None,
+        "arc_hit_rate_pct": None,
+        "swap_used_mb": None,
+        "swap_total_mb": None,
+        "d_state_detected": False,
+        "d_state_tasks": [],
+        "vm_usage": []
+    }
+
+    # CPU Steal & IO Wait (from vmstat / mpstat / iostat / top)
+    vmstat_match = re.search(r"usr:\s*([\d\.]+)%?,\s*sys:\s*([\d\.]+)%?,\s*id:\s*([\d\.]+)%?,\s*wa:\s*([\d\.]+)%?,\s*st:\s*([\d\.]+)%?", hardware_log)
+    if vmstat_match:
+        try:
+            metrics["cpu_iowait_pct"] = float(vmstat_match.group(4))
+            metrics["cpu_steal_pct"] = float(vmstat_match.group(5))
+        except ValueError:
+            pass
+    else:
+        # Check top output format (%Cpu(s): ... wa, ... st)
+        top_match = re.search(r"([\d\.]+)\s*(?:wa|%wa).*?([\d\.]+)\s*(?:st|%st)", hardware_log)
+        if top_match:
+            try:
+                metrics["cpu_iowait_pct"] = float(top_match.group(1))
+                metrics["cpu_steal_pct"] = float(top_match.group(2))
+            except ValueError:
+                pass
+
+    # ARC Stats
+    arc_match = re.search(r"ARC Size:\s*([\d\.]+)\s*GiB\s*/\s*Target Max:\s*([\d\.]+)\s*GiB", hardware_log)
+    if arc_match:
+        try:
+            metrics["arc_size_gib"] = float(arc_match.group(1))
+            metrics["arc_target_max_gib"] = float(arc_match.group(2))
+        except ValueError:
+            pass
+
+    hit_match = re.search(r"ARC Hit Rate:\s*([\d\.]+)%", hardware_log)
+    if hit_match:
+        try:
+            metrics["arc_hit_rate_pct"] = float(hit_match.group(1))
+        except ValueError:
+            pass
+
+    # Swap Status
+    swap_match = re.search(r"Swap:\s*([\d\.]+[GMKiB]+)\s+([\d\.]+[GMKiB]+)\s+([\d\.]+[GMKiB]+)", hardware_log)
+    if swap_match:
+        metrics["swap_total"] = swap_match.group(1)
+        metrics["swap_used"] = swap_match.group(2)
+        metrics["swap_free"] = swap_match.group(3)
+
+    # D-State Tasks
+    if "D-State (uninterruptible sleep / I/O wait) processes detected:" in hardware_log:
+        metrics["d_state_detected"] = True
+        d_block = re.search(r"D-State \(uninterruptible sleep / I/O wait\) processes detected:\n(.*?)(?=\n\n|\nVirtIO-FS|\Z)", hardware_log, re.DOTALL)
+        if d_block:
+            metrics["d_state_tasks"] = [line.strip() for line in d_block.group(1).strip().splitlines() if line.strip()]
+
+    # VM Usage
+    vm_table_match = re.search(r"--- Active QEMU VM Resource Usage ---\n(.*?)(?=\n```|\Z)", hardware_log, re.DOTALL)
+    if vm_table_match:
+        vm_lines = vm_table_match.group(1).strip().splitlines()
+        for line in vm_lines[1:]: # skip header
+            parts = line.split()
+            if len(parts) >= 6:
+                metrics["vm_usage"].append({
+                    "vmid": parts[0],
+                    "name": parts[1],
+                    "status": parts[2],
+                    "cpu_pct": parts[3],
+                    "mem_used": parts[4],
+                    "mem_max": parts[6] if len(parts) > 6 else parts[5]
+                })
+
+    return metrics
+
+def parse_network_metrics(network_log):
+    """Parse Synology Dual-NIC interface statuses from network log."""
+    synology = {
+        "nic1_media": {"ip": "10.0.100.20", "vlan": 100, "status": "Unknown", "ping": False, "ports": {}},
+        "nic2_mgmt": {"ip": "10.0.60.45", "vlan": 60, "status": "Unknown", "ping": False, "ports": {}}
+    }
+
+    # NIC 1 (10.0.100.20)
+    nic1_match = re.search(r"NIC 1.*?\((10\.0\.100\.20)\):\n(.*?)(?=(?:NIC 2|```|\Z))", network_log, re.DOTALL)
+    if nic1_match:
+        block = nic1_match.group(2)
+        synology["nic1_media"]["ping"] = "Ping: REACHABLE" in block
+        synology["nic1_media"]["status"] = "UP" if "Ping: REACHABLE" in block else "DOWN"
+        for port_match in re.finditer(r"TCP Port (\d+):\s*(OPEN / ACCEPTING|CLOSED / FILTERED)", block):
+            port = port_match.group(1)
+            state = "OPEN" if "OPEN" in port_match.group(2) else "CLOSED"
+            synology["nic1_media"]["ports"][port] = state
+
+    # NIC 2 (10.0.60.45)
+    nic2_match = re.search(r"NIC 2.*?\((10\.0\.60\.45)\):\n(.*?)(?=(?:```|\Z))", network_log, re.DOTALL)
+    if nic2_match:
+        block = nic2_match.group(2)
+        synology["nic2_mgmt"]["ping"] = "Ping: REACHABLE" in block
+        synology["nic2_mgmt"]["status"] = "UP" if "Ping: REACHABLE" in block else "DOWN"
+        for port_match in re.finditer(r"TCP Port (\d+):\s*(OPEN / ACCEPTING|CLOSED / FILTERED)", block):
+            port = port_match.group(1)
+            state = "OPEN" if "OPEN" in port_match.group(2) else "CLOSED"
+            synology["nic2_mgmt"]["ports"][port] = state
+
+    return synology
 def main():
     if len(sys.argv) < 6:
         print("Usage: compile_status.py <backup_log> <services_log> <hardware_log> <network_log> <output_json>")
@@ -152,6 +264,21 @@ def main():
     if traefik_data["needs_redeploy"] and services_status != "Critical":
         services_status = "Critical"
         print("Escalating services status to Critical: Traefik deep-check failure detected.")
+
+    # Parse hardware metrics
+    hardware_metrics = parse_hardware_metrics(hardware_content)
+    if hardware_metrics["d_state_detected"] and hardware_status == "Healthy":
+        hardware_status = "Warning"
+        print("Escalating hardware status to Warning: D-State processes detected.")
+
+    # Parse network metrics (Dual-NIC)
+    network_metrics = parse_network_metrics(network_content)
+    syn_nic1 = network_metrics.get("nic1_media", {})
+    syn_nic2 = network_metrics.get("nic2_mgmt", {})
+    if (syn_nic1.get("status") == "DOWN" or syn_nic2.get("status") == "DOWN") and network_status == "Healthy":
+        network_status = "Warning"
+        print("Escalating network status to Warning: One or more Synology NIC interfaces unreachable.")
+
     # Determine overall status
     overall_status = "Healthy"
     statuses = [backup_status, services_status, hardware_status, network_status]
@@ -177,11 +304,13 @@ def main():
             },
             "hardware": {
                 "status": hardware_status,
-                "log": hardware_content
+                "log": hardware_content,
+                "metrics": hardware_metrics
             },
             "network": {
                 "status": network_status,
-                "log": network_content
+                "log": network_content,
+                "synology_nics": network_metrics
             }
         }
     }

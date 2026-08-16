@@ -41,8 +41,8 @@ if ($pwsh7) {
 
 Write-Host "Using shell: $PwshPath" -ForegroundColor DarkGray
 
-# --- Trigger: every 15 minutes, all day ---
-$trigger = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Minutes 15) -Once -At (Get-Date -Hour 0 -Minute 0 -Second 0)
+# --- Trigger: every 1 hour, all day ---
+$trigger = New-ScheduledTaskTrigger -RepetitionInterval (New-TimeSpan -Hours 1) -Once -At (Get-Date -Hour 0 -Minute 0 -Second 0)
 
 # --- Action: run Invoke-HomelabHealth.ps1 non-interactively ---
 $action = New-ScheduledTaskAction -Execute $PwshPath -Argument ("-NonInteractive -ExecutionPolicy Bypass -File `"" + $ScriptPath + "`"")
@@ -61,13 +61,13 @@ if (Get-ScheduledTask -TaskPath "$TaskFolder\" -TaskName $TaskName -ErrorAction 
     Set-ScheduledTask -TaskPath "$TaskFolder\" -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal
 } else {
     Write-Host "Registering new task '$fullPath'..." -ForegroundColor Cyan
-    Register-ScheduledTask -TaskPath "$TaskFolder\" -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description "Runs homelab diagnostics via WSL2 every 15 minutes and syncs status dashboard."
+    Register-ScheduledTask -TaskPath "$TaskFolder\" -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings -Principal $principal -Description "Runs homelab diagnostics via WSL2 every 1 hour and syncs status dashboard."
 }
 
 Write-Host ""
 Write-Host "Task registered successfully." -ForegroundColor Green
 Write-Host "  Path:    $fullPath" -ForegroundColor DarkGray
-Write-Host "  Trigger: Every 15 minutes" -ForegroundColor DarkGray
+Write-Host "  Trigger: Every 1 hour" -ForegroundColor DarkGray
 Write-Host "  Action:  $PwshPath -File `"$ScriptPath`"" -ForegroundColor DarkGray
 Write-Host ""
 Write-Host "To test immediately:" -ForegroundColor Cyan

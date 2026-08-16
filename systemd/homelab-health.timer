@@ -2,7 +2,7 @@
 Description=Run Homelab Health Diagnostics periodically
 
 [Timer]
-OnCalendar=*:0/15
+OnCalendar=hourly
 Persistent=true
 
 [Install]

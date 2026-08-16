@@ -220,6 +220,71 @@ function updateDashboard(data) {
         }
     });
 
+    // Update Hardware metric pills
+    const hwMetrics = data.domains && data.domains.hardware && data.domains.hardware.metrics ? data.domains.hardware.metrics : null;
+    const cpuStealPill = document.getElementById('pill-cpu-steal');
+    const zfsArcPill = document.getElementById('pill-zfs-arc');
+    const swapPill = document.getElementById('pill-swap-usage');
+
+    if (cpuStealPill) {
+        if (hwMetrics && typeof hwMetrics.cpu_steal_pct === 'number') {
+            const st = hwMetrics.cpu_steal_pct;
+            cpuStealPill.innerText = `Steal: ${st}%`;
+            cpuStealPill.className = "metric-pill " + (st > 30 ? "pill-critical" : st > 10 ? "pill-warning" : "pill-healthy");
+        } else {
+            cpuStealPill.innerText = "Steal: --";
+            cpuStealPill.className = "metric-pill";
+        }
+    }
+
+    if (zfsArcPill) {
+        if (hwMetrics && hwMetrics.arc_size_gib !== null) {
+            const hit = hwMetrics.arc_hit_rate_pct !== null ? ` (${hwMetrics.arc_hit_rate_pct}%)` : '';
+            zfsArcPill.innerText = `ARC: ${hwMetrics.arc_size_gib}G${hit}`;
+            zfsArcPill.className = "metric-pill " + (hwMetrics.arc_hit_rate_pct !== null && hwMetrics.arc_hit_rate_pct < 70 ? "pill-warning" : "pill-healthy");
+        } else {
+            zfsArcPill.innerText = "ARC: --";
+            zfsArcPill.className = "metric-pill";
+        }
+    }
+
+    if (swapPill) {
+        if (hwMetrics && (hwMetrics.swap_used || hwMetrics.swap_total)) {
+            swapPill.innerText = `Swap: ${hwMetrics.swap_used || '0B'} / ${hwMetrics.swap_total || '0B'}`;
+            swapPill.className = "metric-pill";
+        } else {
+            swapPill.innerText = "Swap: --";
+            swapPill.className = "metric-pill";
+        }
+    }
+
+    // Update Network Synology Dual-NIC metric pills
+    const synNics = data.domains && data.domains.network && data.domains.network.synology_nics ? data.domains.network.synology_nics : null;
+    const nic1Pill = document.getElementById('pill-syn-nic1');
+    const nic2Pill = document.getElementById('pill-syn-nic2');
+
+    if (nic1Pill) {
+        if (synNics && synNics.nic1_media) {
+            const st = synNics.nic1_media.status || (synNics.nic1_media.ping ? "UP" : "DOWN");
+            nic1Pill.innerText = `NIC1 (100): ${st}`;
+            nic1Pill.className = "metric-pill " + (st === "UP" ? "pill-healthy" : "pill-critical");
+        } else {
+            nic1Pill.innerText = "NIC1 (100): --";
+            nic1Pill.className = "metric-pill";
+        }
+    }
+
+    if (nic2Pill) {
+        if (synNics && synNics.nic2_mgmt) {
+            const st = synNics.nic2_mgmt.status || (synNics.nic2_mgmt.ping ? "UP" : "DOWN");
+            nic2Pill.innerText = `NIC2 (60): ${st}`;
+            nic2Pill.className = "metric-pill " + (st === "UP" ? "pill-healthy" : "pill-critical");
+        } else {
+            nic2Pill.innerText = "NIC2 (60): --";
+            nic2Pill.className = "metric-pill";
+        }
+    }
+
     // Parse LLM insight / fallback rule summaries
     const insightText = document.getElementById('llm-insight-text');
     
