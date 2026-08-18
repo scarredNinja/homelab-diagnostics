@@ -24,14 +24,17 @@ ssh "${SSH_OPTS[@]}" "root@$PVE_HOST" "uptime"
 echo ""
 ssh "${SSH_OPTS[@]}" "root@$PVE_HOST" "free -h"
 echo ""
-echo "--- Host CPU Metrics (iostat / vmstat / top) ---"
+echo "--- Host CPU Metrics (iostat / vmstat / mpstat / top) ---"
 ssh "${SSH_OPTS[@]}" "root@$PVE_HOST" '
     if command -v mpstat >/dev/null 2>&1; then
-        mpstat 1 1 | tail -n 2
-    elif command -v iostat >/dev/null 2>&1; then
-        iostat -c 1 2 | tail -n 3
+        echo "mpstat (CPU steal and breakdown):"
+        mpstat 1 2 | tail -n 2
     elif command -v vmstat >/dev/null 2>&1; then
+        echo "vmstat (usr, sys, id, wa, st):"
         vmstat 1 2 | tail -n 1 | awk "{printf \"usr: %s%%, sys: %s%%, id: %s%%, wa: %s%%, st: %s%%\n\", \$13, \$14, \$15, \$16, \$17}"
+    elif command -v iostat >/dev/null 2>&1; then
+        echo "iostat CPU:"
+        iostat -c 1 2 | tail -n 3
     else
         top -bn1 | grep "Cpu(s)" || true
     fi

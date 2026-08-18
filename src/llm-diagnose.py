@@ -435,7 +435,7 @@ def is_dev_service(service_name):
     if not service_name:
         return False
     name = str(service_name).lower()
-    return name.startswith("dev-") or name.startswith("dev_")
+    return name.startswith("dev-") or name.startswith("dev_") or name.startswith("woodpecker_") or name.startswith("forgejo_")
 
 
 def remediate_down_nodes(nodes, output_dir=None, current_timestamp=None):

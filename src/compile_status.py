@@ -240,6 +240,20 @@ def parse_network_metrics(network_log):
             synology["nic2_mgmt"]["ports"][port] = state
 
     return synology
+def is_dev_node(hostname):
+    """Check if a node hostname belongs to the dev environment."""
+    if not hostname:
+        return False
+    h = str(hostname).lower()
+    return h.startswith("dev-") or h.startswith("dev_") or h in ["dev-node-01", "dev-runner-01"]
+
+def is_dev_service(service_name):
+    """Check if a service belongs to the dev stack/environment."""
+    if not service_name:
+        return False
+    name = str(service_name).lower()
+    return name.startswith("dev-") or name.startswith("dev_") or name.startswith("woodpecker_") or name.startswith("forgejo_")
+
 def main():
     if len(sys.argv) < 6:
         print("Usage: compile_status.py <backup_log> <services_log> <hardware_log> <network_log> <output_json>")
@@ -256,21 +270,22 @@ def main():
     hardware_content, hardware_status = parse_log(hardware_log_path)
     network_content, network_status = parse_log(network_log_path)
     
-    # Parse Swarm node statuses from services log
+    # Parse Swarm node statuses from services log (ignore drained or dev nodes for Critical escalation)
     nodes = parse_node_statuses(services_content)
-    has_down_nodes = any(
-        n["status"] != "Ready" and n["availability"] != "Drain"
-        for n in nodes
-    )
-    if has_down_nodes and services_status != "Critical":
+    prod_down_nodes = [
+        n for n in nodes
+        if n["status"] != "Ready" and n["availability"] != "Drain" and not is_dev_node(n["hostname"])
+    ]
+    if prod_down_nodes and services_status != "Critical":
         services_status = "Critical"
-        print(f"Escalating services status to Critical: {len([n for n in nodes if n['status'] != 'Ready'])} node(s) are Down.")
+        print(f"Escalating services status to Critical: {len(prod_down_nodes)} production node(s) are Down.")
 
-    # Parse degraded services
+    # Parse degraded services (ignore dev services for Warning escalation)
     degraded_services = parse_degraded_services(services_content)
-    if degraded_services and services_status == "Healthy":
+    prod_degraded_services = [s for s in degraded_services if not is_dev_service(s)]
+    if prod_degraded_services and services_status == "Healthy":
         services_status = "Warning"
-        print(f"Escalating services status to Warning: {len(degraded_services)} degraded service(s) detected.")
+        print(f"Escalating services status to Warning: {len(prod_degraded_services)} production degraded service(s) detected.")
 
     # Parse Traefik health status
     traefik_data = parse_traefik_status(services_content)
