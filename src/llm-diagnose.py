@@ -422,13 +422,27 @@ def get_node_ip_from_proxmox(vmid):
                         return ip
     except Exception as e:
         print(f"Could not parse guest agent network interfaces: {e}")
-    return None
+def is_dev_node(hostname):
+    """Check if a node hostname belongs to the dev environment."""
+    if not hostname:
+        return False
+    h = str(hostname).lower()
+    return h.startswith("dev-") or h.startswith("dev_") or h in ["dev-node-01", "dev-runner-01"]
+
+
+def is_dev_service(service_name):
+    """Check if a service belongs to the dev stack/environment."""
+    if not service_name:
+        return False
+    name = str(service_name).lower()
+    return name.startswith("dev-") or name.startswith("dev_")
 
 
 def remediate_down_nodes(nodes, output_dir=None, current_timestamp=None):
     """
     Given the list of Swarm node dicts (from status.json), attempt to recover
-    any nodes whose status is not 'Ready'.
+    any nodes whose status is not 'Ready'. Skips dev nodes (dev-node-01, dev-runner-01, etc.)
+    which are turned on/off manually.
 
     Returns a list of remediation result dicts.
     """
@@ -446,6 +460,10 @@ def remediate_down_nodes(nodes, output_dir=None, current_timestamp=None):
 
     for node in down_nodes:
         hostname = node["hostname"]
+        if is_dev_node(hostname):
+            print(f"Skipping auto-recovery for dev node '{hostname}' (dev nodes are managed manually).")
+            continue
+
         vm_info = pve_vms.get(hostname)
 
         if not vm_info:
@@ -558,7 +576,11 @@ def remediate_degraded_services(degraded_services, hardware_data=None, output_di
     if not degraded_services:
         return []
 
-    services = [s for s in degraded_services if s != "temp-secret-check"]
+    services = [s for s in degraded_services if s != "temp-secret-check" and not is_dev_service(s)]
+    ignored_dev_services = [s for s in degraded_services if is_dev_service(s)]
+    if ignored_dev_services:
+        print(f"Skipping auto-remediation for dev services: {ignored_dev_services} (dev nodes/services are managed manually).")
+
     if not services:
         return []
 
@@ -686,9 +708,10 @@ def run_ollama(status_data):
         "- `restic unlock` (if repository is reported locked)\n"
         "- `docker service update -d --force <service_name>` (if replica counts do not match; max 2 services)\n"
         "- `docker restart <container_name>` (if container status is not running/healthy; whitelisted for `gluetun` and `compose-vpn-transmission-1`)\n"
-        "- `qm start <vmid>` (if a Proxmox VM/Swarm node is stopped)\n"
+        "- `qm start <vmid>` (if a non-dev Proxmox VM/Swarm node is stopped; do NOT auto-start dev VMs 206/207 or dev-* nodes)\n"
         "- `qm stop 206` / `qm stop 207` (if host CPU steal > 30% and dev VMs need to be suspended)\n"
         "- `sudo systemctl restart docker` (if a Swarm node VM is running but Docker is unresponsive)\n"
+        "- Do not attempt auto-remediation on dev nodes (dev-node-01, dev-runner-01) or dev-* services as they are manually powered on/off when needed.\n"
         "Do not suggest other auto-remediations."
         + node_summary
     )
@@ -738,7 +761,9 @@ def fallback_rule_based_diagnosis(status_data):
                 if running != desired:
                     parts = line.split()
                     if len(parts) > 0 and parts[0] != "NAME":
-                        degraded_services.append(parts[0])
+                        svc_name = parts[0]
+                        if not is_dev_service(svc_name):
+                            degraded_services.append(svc_name)
         for svc in sorted(degraded_services, key=get_service_remediation_priority)[:2]:
             remediations.append({
                 "command": f"docker service update -d --force {svc}",
